@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import org.otaku.pictureViewer.util.ImageFileFilter;
 import org.otaku.pictureViewer.util.SystemUtil;
 
 public class FileTreePanel extends JPanel {
@@ -51,7 +52,7 @@ public class FileTreePanel extends JPanel {
 		return root;
 	}
 	
-	private static class FileTreeSelectionListener implements TreeSelectionListener {
+	private class FileTreeSelectionListener implements TreeSelectionListener {
 
 		@Override
 		public void valueChanged(TreeSelectionEvent e) {
@@ -66,10 +67,17 @@ public class FileTreePanel extends JPanel {
 				return;
 			}
 			File f = (File)userObject;
-			if (f.isDirectory() && treeNode.isLeaf()) {
-				for (File cf : f.listFiles()) {
-					treeNode.add(new DefaultMutableTreeNode(cf));
+			if (f.isDirectory()) {
+				treeNode.removeAllChildren();
+				File[] fs = f.listFiles(ImageFileFilter.INSTANCE_WITH_DIR);
+				if (fs != null) {
+					for (File cf : fs) {
+						treeNode.add(new DefaultMutableTreeNode(cf));
+					}
 				}
+				//右边显示图像
+				File[] picFiles = f.listFiles(ImageFileFilter.INSTANCE_NO_DIR);
+				FileTreePanel.this.mainWindow.picturesPanel.showPictures(picFiles);
 			}
 		}
 		

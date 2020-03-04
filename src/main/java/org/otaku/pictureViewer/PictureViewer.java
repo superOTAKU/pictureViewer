@@ -2,6 +2,7 @@ package org.otaku.pictureViewer;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.otaku.pictureViewer.ui.MainWindow;
 
@@ -19,10 +20,11 @@ public class PictureViewer {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				UIManager.setLookAndFeel(new NimbusLookAndFeel());
+				new MainWindow().init();
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			new MainWindow().init();
 		});
 	}
 }
